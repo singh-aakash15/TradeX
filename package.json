@@ -17,5 +17,12 @@
   "bugs": {
     "url": "https://github.com/singh-aakash15/TradeX/issues"
   },
-  "homepage": "https://github.com/singh-aakash15/TradeX#readme"
+  "homepage": "https://github.com/singh-aakash15/TradeX#readme",
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
+  }
 }
