@@ -43,3 +43,12 @@ export class MatchingEngine {
             if (takerOrder.side === OrderSide.SELL && bestOpponent.price < takerOrder.price) {
                 break;
             }
+            // 3. Self-Trade Prevention (STP): Disallow same user trading with themselves
+            if (bestOpponent.userId === takerOrder.userId) {
+                break;
+            }
+            // 4. Execute the match and generate Trade event
+            const matchResult = this.executeMatch(book, takerOrder, bestOpponent, remainingTakerQty);
+            trades.push(matchResult.trade);
+            makerOrdersUpdated.push(matchResult.updatedMakerOrder);
+        }
