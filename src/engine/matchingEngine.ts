@@ -20,3 +20,12 @@ export class MatchingEngine {
             return this.matchMarketOrder(book, order);
         }
     }
+    /**
+      * Continuous Double Auction matching algorithm for LIMIT orders
+      */
+    private matchLimitOrder(book: OrderBook, takerOrder: Order): MatchResult {
+        const trades: Trade[] = [];
+        const makerOrdersUpdated: Order[] = [];
+        // Loop until the incoming taker order is fully filled
+        while (takerOrder.filledQuantity < takerOrder.quantity) {
+            const remainingTakerQty = takerOrder.quantity - takerOrder.filledQuantity;
