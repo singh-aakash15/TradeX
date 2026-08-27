@@ -52,3 +52,23 @@ export class MatchingEngine {
             trades.push(matchResult.trade);
             makerOrdersUpdated.push(matchResult.updatedMakerOrder);
         }
+
+        // 5. Update lifecycle status of the incoming taker order
+        if (takerOrder.filledQuantity === takerOrder.quantity) {
+            takerOrder.status = OrderStatus.FILLED;
+        } else if (takerOrder.filledQuantity > 0) {
+            takerOrder.status = OrderStatus.PARTIALLY_FILLED;
+            // Place the remaining unfilled portion into the book for future matches
+            book.addOrder(takerOrder);
+        } else {
+            takerOrder.status = OrderStatus.OPEN;
+            book.addOrder(takerOrder);
+        }
+        return {
+            trades,
+            order: takerOrder,
+            makerOrdersUpdated
+        };
+    }
+
+
