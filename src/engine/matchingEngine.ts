@@ -29,3 +29,17 @@ export class MatchingEngine {
         // Loop until the incoming taker order is fully filled
         while (takerOrder.filledQuantity < takerOrder.quantity) {
             const remainingTakerQty = takerOrder.quantity - takerOrder.filledQuantity;
+            // 1. Inspect the best opposing resting order
+            const bestOpponent = takerOrder.side === OrderSide.BUY
+                ? book.getBestAsk()   // Buyer matches against lowest Ask
+                : book.getBestBid();  // Seller matches against highest Bid
+            if (!bestOpponent) break; // No counter-party available in the book
+            // 2. Price Compatibility Check:
+            // BUY: Must not pay more than limit price (bestAsk <= buyerLimitPrice)
+            if (takerOrder.side === OrderSide.BUY && bestOpponent.price > takerOrder.price) {
+                break;
+            }
+            // SELL: Must not sell for less than limit price (bestBid >= sellerLimitPrice)
+            if (takerOrder.side === OrderSide.SELL && bestOpponent.price < takerOrder.price) {
+                break;
+            }
